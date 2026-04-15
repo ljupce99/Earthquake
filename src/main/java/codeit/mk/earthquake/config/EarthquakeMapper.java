@@ -18,6 +18,7 @@ public class EarthquakeMapper {
                 : null;
 
         return EarthquakeDto.builder()
+                .id(earthquake.getId())
                 .magnitude(earthquake.getMagnitude())
                 .magType(earthquake.getMagType())
                 .place(earthquake.getPlace())

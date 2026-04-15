@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleExternalApi(ExternalApiException ex) {
         log.error("External API error: {}", ex.getMessage(), ex);
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body(ApiResponse.error("External USGS API is unavailable: " + ex.getMessage()));
+                .body(ApiResponse.error(ex.getMessage()));
     }
 
     @ExceptionHandler(GeoJsonParseException.class)

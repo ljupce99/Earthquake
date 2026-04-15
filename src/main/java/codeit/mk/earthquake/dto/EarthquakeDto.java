@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class EarthquakeDto {
+    private Long id;
     private Double magnitude;
     private String magType;
     private String place;

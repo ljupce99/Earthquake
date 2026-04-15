@@ -9,6 +9,7 @@ import codeit.mk.earthquake.exception.GeoJsonParseException;
 import codeit.mk.earthquake.model.Earthquake;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -38,8 +39,10 @@ public class UsgsApiService {
                 throw new ExternalApiException("USGS API returned empty response");
             }
             return response;
-        } catch (RestClientException ex) {
+        } catch (ResourceAccessException ex) {
             throw new ExternalApiException("Failed to connect to USGS API", ex);
+        } catch (RestClientException ex) {
+            throw new ExternalApiException("USGS API request failed", ex);
         }
     }
 

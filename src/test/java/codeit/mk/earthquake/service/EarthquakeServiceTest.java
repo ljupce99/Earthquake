@@ -53,13 +53,14 @@ class EarthquakeServiceTest {
         when(earthquakeRepository.saveAll(anyList())).thenAnswer(inv -> inv.getArgument(0));
         when(earthquakeMapper.toDto(any())).thenAnswer(inv -> {
             Earthquake e = inv.getArgument(0);
-            return EarthquakeDto.builder().place(e.getPlace()).magnitude(e.getMagnitude()).build();
+            return EarthquakeDto.builder().id(e.getId()).place(e.getPlace()).magnitude(e.getMagnitude()).build();
         });
 
         List<EarthquakeDto> result = earthquakeService.fetchAndRefreshEarthquakes();
 
         // Only the high-magnitude earthquake should be saved
         assertThat(result).hasSize(1);
+        assertThat(result.getFirst().getId()).isEqualTo(2L);
         assertThat(result.get(0).getMagnitude()).isEqualTo(3.2);
         verify(earthquakeRepository).deleteAllEarthquakes();
         verify(earthquakeRepository).saveAll(argThat(list -> ((List<?>) list).size() == 1));
@@ -99,12 +100,13 @@ class EarthquakeServiceTest {
         when(earthquakeRepository.findAll()).thenReturn(stored);
         when(earthquakeMapper.toDto(any())).thenAnswer(inv -> {
             Earthquake e = inv.getArgument(0);
-            return EarthquakeDto.builder().place(e.getPlace()).build();
+            return EarthquakeDto.builder().id(e.getId()).place(e.getPlace()).build();
         });
 
         List<EarthquakeDto> result = earthquakeService.getAllEarthquakes();
 
         assertThat(result).hasSize(2);
+        assertThat(result).extracting(EarthquakeDto::getId).containsExactlyInAnyOrder(1L, 2L);
     }
 
     // ── getEarthquakesByMinMagnitude ───────────────────────────────────────────

@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -224,13 +225,23 @@ class UsgsApiServiceTest {
     }
 
     @Test
-    void fetchRawGeoJson_restClientException_throwsExternalApiException() {
+    void fetchRawGeoJson_resourceAccessException_throwsExternalApiException() {
         when(restTemplate.getForObject(USGS_URL, String.class))
-                .thenThrow(new RestClientException("Connection refused"));
+                .thenThrow(new ResourceAccessException("Connection refused"));
 
         assertThatThrownBy(() -> usgsApiService.fetchRawGeoJson())
                 .isInstanceOf(ExternalApiException.class)
                 .hasMessageContaining("Failed to connect");
+    }
+
+    @Test
+    void fetchRawGeoJson_restClientException_throwsExternalApiException() {
+        when(restTemplate.getForObject(USGS_URL, String.class))
+                .thenThrow(new RestClientException("Bad gateway"));
+
+        assertThatThrownBy(() -> usgsApiService.fetchRawGeoJson())
+                .isInstanceOf(ExternalApiException.class)
+                .hasMessageContaining("request failed");
     }
 
     // ── helpers ───────────────────────────────────────────────────────────────
