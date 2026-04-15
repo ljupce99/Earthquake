@@ -22,6 +22,7 @@ public class EarthquakeScheduler {
      */
     @Scheduled(fixedRateString = "${earthquake.scheduler.rate-minutes:5}", timeUnit = TimeUnit.MINUTES)
     public void scheduledFetch() {
+//        System.out.println("Scheduled earthquake data refresh started");
         log.info("Scheduled earthquake data refresh started");
         try {
             var saved = earthquakeService.fetchAndRefreshEarthquakes();
