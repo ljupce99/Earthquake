@@ -6,6 +6,8 @@ import codeit.mk.earthquake.service.EarthquakeService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -18,7 +20,7 @@ public class EarthquakeScheduler {
      * The USGS "all_hour" feed updates frequently, so polling every 5 minutes
      * keeps the database reasonably current.
      */
-    @Scheduled(fixedRateString = "${earthquake.scheduler.rate-ms:300000}")
+    @Scheduled(fixedRateString = "${earthquake.scheduler.rate-minutes:5}", timeUnit = TimeUnit.MINUTES)
     public void scheduledFetch() {
         log.info("Scheduled earthquake data refresh started");
         try {
